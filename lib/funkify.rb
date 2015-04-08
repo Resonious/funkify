@@ -67,12 +67,10 @@ module Funkify
   def self.auto_curry_some_methods(names, receiver)
     names.each do |name|
       m = receiver.instance_method(name)
-      curried_method = nil
 
       receiver.class_eval do
         define_method(name) do |*args|
-          curried_method ||= m.bind(self).to_proc.curry
-          curried_method[*args]
+          m.bind(self).to_proc.curry.call(*args)
         end
       end
     end
